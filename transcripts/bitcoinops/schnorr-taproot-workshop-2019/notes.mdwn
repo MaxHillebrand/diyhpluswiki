@@ -80,7 +80,7 @@ Scalar operations are a bit different, though. There are ways to do operations b
 
 Let's switch over to the notebook.
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/0.2-Elliptic-Curve-Math.ipynb>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/0.2-elliptic-curve-math.ipynb>
 
 ECKey.generate will generate a valid scalar, so that you don't have to run randrange(1, SECP256K1\_ORDER). There is also a function generate\_key\_pair to help make your life easier.
 
@@ -126,7 +126,7 @@ In practice, we actually use quadratic residue. I assure you, it's all number th
 
 With this, it means we're only sending x. This means the signature is going to be 64 bytes which is less than the current ECDSA signature size which is up to 72 bytes. So we have made Schnorr better in signature size than ECDSA.
 
-Now let's go through the notebooks: <https://github.com/bitcoinops/taproot-workshop/blob/master/1.1-Introduction-to-Schnorr.ipynb>
+Now let's go through the notebooks: <https://github.com/bitcoinops/taproot-workshop/blob/master/1.1-schnorr-signatures.ipynb>
 
 The signature s is k + H(x(R) | P | m)d where k is the nonce, x(R) is the x-coordinate of R (the nonce point), d is the private key.
 
@@ -180,7 +180,7 @@ Now we'll switch to talking about Musig.
 
 paper: <https://eprint.iacr.org/2018/068>
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/1.2-Introduction-to-Musig.ipynb>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/1.2-musig.ipynb>
 
 Something nice about Schnorr which is not available in ECDSA is that because the function is linear, we can do multisignatures. We'll start by going over the naieve multisignature and how it looks like and how Schnorr makes it easy. Then we'll show some problems with it, and how to solve those problems.
 
@@ -282,7 +282,7 @@ SIGHASH\_ALL is the most used and by far the most common. So you get to save a s
 
 Let's look at the notebooks.
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/2.1-Segwit-Version-1.ipynb>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/2.1-segwit-version-1.ipynb>
 
 In this notebook, we're going to use a segwit v1 example that we send coins to from the coinbase outputs. Then we construct a CTransaction that spends this taproot output back to the wallet address. So we'll take a segwit v1 output, we'll spend it on the public key path, and in the future we'll do a spend using one of the script paths, but the pattern remains the same and we're going to do this over and over again.
 
@@ -302,7 +302,7 @@ To spend it, you serialize the transaction, and then you do testmempoolaccept to
 
 Now we're going to do the same thing, but with a musig public key. You can use a single sig, multisig key, or a musig aggregated key. So we're going to do the same thing as above, but we're going to use a different key. We're going to generate a segwit v1 address for a 2-of-2 musig aggregated public key. This is section 2.1.9. There's no real gotchas there. You can use generate\_musig\_key(ECpubkeylist). You'll have to generate the witness program, and from that you're going to be able to generate the address.
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/solutions/2.1-Segwit-Version-1-Solutions.txt>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/solutions/2.1-segwit-version-1-solutions.ipynb>
 
 In section 2.1.11, you're just printing out a transaction template for spending a musig aggregated key address. Just constructing a transaction which spends the musig segwit v1 output. So, initiate a CTransaction object and populate the version, locktime and inputs. We set the input as a COutPoint of the musig transaction output with the right index. In this example, we send the funds back to the wallet address, which we don't need to do but it makes the example a little easier to understand.
 
@@ -314,7 +314,7 @@ The nice thing about spending along the keypath is that the witnesses look the s
 
 # Taptweak
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/solutions/2.2-TapTweak-Solutions.txt>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/solutions/2.2-taptweak-solutions.ipynb>
 
 Any data can be committed to a public key tweak. There's some nice properties of this that we will use for taproot. Generally speaking, the owner of the public key, the one that can spend it, can do so as long as they have knowledge of the tweak. Doing the key path spend doesn't reveal the tweak or the committed scripts inside of that taproot output. The owner of the private key can later reveal the commitment without revealing the private key.
 
@@ -414,7 +414,7 @@ The script code under the signature hash... if you're a hardware wallet and it h
 
 To spend along the single tapscript, we basically just need more witness elements. Before, we just had a single signature. In this case, we need to supply the witness elements that fulfill the locking conditions of the tapscript which can be any tapscript you're committing. Then we have to provide the tapscript itself, and finally the internal key which is a part of the witness element called the control block. The control block could also include other things like inclusion proofs, but in this case, we only have one tapscript and that's all we need to show.
 
-<https://github.com/bitcoinops/taproot-workshop/blob/master/2.3-Tapscript.ipynb>
+<https://github.com/bitcoinops/taproot-workshop/blob/master/2.3-tapscript.ipynb>
 
 Q: How does the verifier know based on this witness, whether it's a key path spend or spend path. How does the verifier know given this as a witness, that this is not a keypath spend but a script path spend.
 
